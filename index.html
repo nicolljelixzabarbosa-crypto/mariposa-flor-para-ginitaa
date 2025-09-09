@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mariposa en la Flor 🦋🌻</title>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <style>
+    html,body { height:100%; margin:0; }
+    body { background:#ffffff; display:flex; align-items:center; justify-content:center; }
+    #defaultCanvas0 { display:block; }
+  </style>
+</head>
+<body>
+<script>
+let angle = 0;
+let butterflyX = -200;
+let butterflyY = -200;
+let targetX, targetY;
+let arrived = false;
+
+function setup() {
+  createCanvas(600, 600);
+  angleMode(DEGREES);
+  // posición final (sobre la flor)
+  targetX = width/2 - 40;
+  targetY = height/2 - 80;
+}
+
+function draw() {
+  background(255);
+  drawFlower();
+
+  // Movimiento hacia la flor (si no ha llegado)
+  if (!arrived) {
+    butterflyX = lerp(butterflyX, targetX, 0.05);
+    butterflyY = lerp(butterflyY, targetY, 0.05);
+    if (dist(butterflyX, butterflyY, targetX, targetY) < 1) {
+      arrived = true;
+    }
+  }
+
+  drawButterfly(butterflyX, butterflyY, arrived);
+}
+
+function drawFlower() {
+  push();
+  translate(width/2, height/2);
+
+  fill("yellow");
+  noStroke();
+  for (let i = 0; i < 12; i++) {
+    push();
+    rotate(i * 30);
+    ellipse(0, -100, 80, 150);
+    pop();
+  }
+
+  fill("saddlebrown");
+  circle(0, 0, 100);
+
+  stroke("green");
+  strokeWeight(20);
+  line(0, 50, 0, 300);
+
+  noStroke();
+  fill("green");
+  ellipse(-60, 200, 120, 60);
+  ellipse(60, 250, 120, 60);
+  pop();
+}
+
+function drawButterfly(x, y, landed) {
+  push();
+  translate(x, y);
+  rotate(-20);
+
+  let wingOffset = landed ? 8 * sin(frameCount * 0.1) : sin(angle) * 30;
+  if (!landed) angle += 5;
+
+  noStroke();
+  fill(255, 100, 200, 200);
+  ellipse(-30 - wingOffset/2, 0, 60, 80);
+  ellipse(30 + wingOffset/2, 0, 60, 80);
+
+  fill(150, 50, 200, 200);
+  ellipse(-20 - wingOffset, -40, 50, 70);
+  ellipse(20 + wingOffset, -40, 50, 70);
+
+  fill(50);
+  rect(-5, -40, 10, 80, 5);
+
+  stroke(50);
+  strokeWeight(2);
+  line(0, -40, -15, -70);
+  line(0, -40, 15, -70);
+
+  pop();
+}
+</script>
+</body>
+</html>
